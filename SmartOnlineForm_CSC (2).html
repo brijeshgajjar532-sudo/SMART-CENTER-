@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Online Form & CSC Center</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --blue-dark: #1a3a8f;
+    --blue-mid: #185FA5;
+    --blue-light: #e6f1fb;
+    --green-wa: #25D366;
+    --border: #d1d5db;
+    --bg: #f5f7fa;
+    --card: #ffffff;
+    --text: #1a1a2e;
+    --muted: #6b7280;
+    --radius: 10px;
+    --radius-sm: 7px;
+  }
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 1rem 0.5rem 3rem;
+  }
+  .wrap { max-width: 640px; margin: 0 auto; }
+
+  /* HEADER */
+  .header {
+    background: var(--card);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    padding: 1.5rem 1rem 1.2rem;
+    text-align: center;
+    margin-bottom: 1rem;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  .logo-wrap {
+    width: 88px; height: 88px;
+    border-radius: 50%;
+    border: 3px solid var(--blue-dark);
+    margin: 0 auto 0.75rem;
+    overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--blue-light);
+  }
+  .logo-wrap img { width: 100%; height: 100%; object-fit: cover; }
+  .logo-placeholder { font-size: 28px; color: var(--blue-dark); }
+  .app-name {
+    font-size: 16px; font-weight: 700;
+    color: var(--blue-dark);
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+  }
+  .app-sub { font-size: 12px; color: var(--muted); margin-top: 5px; line-height: 1.6; }
+  .contact-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: var(--blue-light); color: var(--blue-mid);
+    border-radius: 20px; padding: 5px 14px;
+    font-size: 13px; font-weight: 600; margin-top: 8px;
+  }
+
+  /* CARD */
+  .card {
+    background: var(--card);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    padding: 1.2rem 1.1rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  }
+  .section-label {
+    font-size: 11px; font-weight: 700;
+    color: var(--blue-dark);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 0.75rem;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .section-label i { font-size: 15px; }
+
+  /* FIELDS */
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+  .field-row.single { grid-template-columns: 1fr; }
+  .field-group { display: flex; flex-direction: column; gap: 4px; }
+  .field-group label { font-size: 12px; color: var(--muted); font-weight: 500; }
+  .field-group input,
+  .field-group select,
+  .field-group textarea {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 9px 11px;
+    font-size: 14px;
+    background: #f9fafb;
+    color: var(--text);
+    width: 100%;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .field-group input:focus,
+  .field-group select:focus,
+  .field-group textarea:focus { border-color: var(--blue-mid); background: #fff; }
+  .field-group textarea { resize: vertical; min-height: 70px; }
+
+  /* SERVICES GRID */
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .svc-chip {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 8px 10px;
+    font-size: 12px;
+    cursor: pointer;
+    background: #f9fafb;
+    color: var(--muted);
+    transition: all 0.15s;
+    user-select: none;
+    display: flex; align-items: center; gap: 6px;
+    line-height: 1.3;
+  }
+  .svc-chip i { font-size: 15px; flex-shrink: 0; }
+  .svc-chip:hover { border-color: var(--blue-mid); color: var(--blue-mid); }
+  .svc-chip.selected {
+    background: var(--blue-light);
+    border-color: var(--blue-mid);
+    color: var(--blue-dark);
+    font-weight: 600;
+  }
+
+  /* BUTTONS */
+  .btn-row { display: flex; gap: 10px; margin-top: 0.25rem; flex-wrap: wrap; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 10px 18px;
+    border-radius: var(--radius-sm);
+    font-size: 14px; font-weight: 600;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--text);
+    transition: all 0.15s;
+  }
+  .btn:hover { background: #f0f0f0; }
+  .btn.primary { background: var(--blue-dark); border-color: var(--blue-dark); color: #fff; }
+  .btn.primary:hover { background: #15307a; }
+  .btn.whatsapp { background: var(--green-wa); border-color: #1cb851; color: #fff; }
+  .btn.whatsapp:hover { background: #1fb857; }
+  .btn i { font-size: 17px; }
+
+  /* TOKEN / RECEIPT */
+  .token-box {
+    background: linear-gradient(135deg, #e6f1fb 0%, #f0f7ff 100%);
+    border: 1.5px solid var(--blue-mid);
+    border-radius: var(--radius);
+    padding: 1.2rem;
+    margin-top: 1rem;
+    display: none;
+  }
+  .token-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 10px; margin-bottom: 1rem; }
+  .token-num { font-size: 38px; font-weight: 700; color: var(--blue-dark); letter-spacing: 3px; }
+  .token-sub { font-size: 12px; color: var(--blue-mid); margin-top: 2px; }
+  .status-pill {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: #d1fae5; color: #065f46;
+    border-radius: 20px; padding: 5px 12px;
+    font-size: 12px; font-weight: 600;
+  }
+  .receipt-row {
+    display: flex; justify-content: space-between;
+    font-size: 13px; padding: 6px 0;
+    border-bottom: 1px dashed rgba(26,58,143,0.15);
+  }
+  .receipt-row:last-child { border-bottom: none; }
+  .receipt-key { color: var(--blue-mid); }
+  .receipt-val { color: var(--text); font-weight: 600; max-width: 60%; text-align: right; }
+
+  /* CENTER BRANDING ON RECEIPT BOTTOM */
+  .receipt-footer {
+    margin-top: 12px; text-align: center;
+    font-size: 11px; color: var(--blue-mid); opacity: 0.8;
+  }
+
+  .error-msg { color: #b91c1c; font-size: 13px; margin-top: 8px; display: none; }
+
+  @media (max-width: 480px) {
+    .field-row { grid-template-columns: 1fr; }
+    .services-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
+    .btn-row { flex-direction: column; }
+    .btn { justify-content: center; }
+  }
+
+  @media print {
+    body { background: #fff; padding: 0; }
+    .card, .header { box-shadow: none; border: 1px solid #ccc; }
+    .btn-row, .services-grid, .field-row { display: none !important; }
+    .token-box { display: block !important; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="logo-wrap">
+      <img src="LOGO.jpg" alt="Logo" onerror="this.style.display='none'; document.getElementById('logoFallback').style.display='flex'">
+      <div id="logoFallback" style="display:none; width:100%; height:100%; align-items:center; justify-content:center;">
+        <i class="ti ti-building-store" style="font-size:36px; color:#1a3a8f;"></i>
+      </div>
+    </div>
+    <div class="app-name">Smart Online Form &amp; CSC Center</div>
+    <div class="app-sub">
+      7, Smart Online Form Center, Nr C-DAC Computer,<br>
+      Bavla Road, Sanand – 382110
+    </div>
+    <div class="contact-badge">
+      <i class="ti ti-phone"></i> 9726266991
+    </div>
+  </div>
+
+  <!-- CUSTOMER DETAILS -->
+  <div class="card">
+    <div class="section-label"><i class="ti ti-user"></i> Customer details</div>
+    <div class="field-row">
+      <div class="field-group">
+        <label for="cname">Customer name</label>
+        <input type="text" id="cname" placeholder="Full name">
+      </div>
+      <div class="field-group">
+        <label for="cmobile">Mobile number</label>
+        <input type="tel" id="cmobile" placeholder="10-digit number" maxlength="10">
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field-group">
+        <label for="cdate">Date</label>
+        <input type="date" id="cdate">
+      </div>
+      <div class="field-group">
+        <label for="ctime">Time</label>
+        <input type="time" id="ctime">
+      </div>
+    </div>
+  </div>
+
+  <!-- SERVICES -->
+  <div class="card">
+    <div class="section-label"><i class="ti ti-layout-grid"></i> Select service</div>
+    <div class="services-grid" id="svcGrid"></div>
+    <div class="field-row single" style="margin-top:6px;">
+      <div class="field-group">
+        <label for="svcName">Service name / details</label>
+        <input type="text" id="svcName" placeholder="Auto-filled or type manually">
+      </div>
+    </div>
+  </div>
+
+  <!-- FEEDBACK -->
+  <div class="card">
+    <div class="section-label"><i class="ti ti-message-circle"></i> Feedback</div>
+    <div class="field-row single">
+      <div class="field-group">
+        <label for="feedback">Customer feedback</label>
+        <textarea id="feedback" placeholder="Feedback, remarks, ya koi note…"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- BUTTONS -->
+  <div class="btn-row">
+    <button class="btn primary" onclick="generateToken()">
+      <i class="ti ti-file-check"></i> Token generate karo
+    </button>
+    <button class="btn whatsapp" onclick="sendWhatsApp()">
+      <i class="ti ti-brand-whatsapp"></i> WhatsApp par moko
+    </button>
+    <button class="btn" onclick="resetForm()">
+      <i class="ti ti-refresh"></i> Reset
+    </button>
+  </div>
+  <div class="error-msg" id="errMsg"></div>
+
+  <!-- TOKEN / RECEIPT -->
+  <div class="token-box" id="tokenBox">
+    <div class="token-header">
+      <div>
+        <div style="font-size:12px; color:#185FA5; font-weight:600; margin-bottom:2px;">APPOINTMENT TOKEN</div>
+        <div class="token-num" id="tokenNum">SOF-000</div>
+        <div class="token-sub" id="tokenDate"></div>
+      </div>
+      <div class="status-pill"><i class="ti ti-check"></i> Confirmed</div>
+    </div>
+    <div id="receiptRows"></div>
+    <div class="receipt-footer">
+      Smart Online Form &amp; CSC Center · Sanand · 9726266991
+    </div>
+  </div>
+
+</div>
+
+<script>
+const SERVICES = [
+  { name: "PAN card", icon: "ti-id" },
+  { name: "Voter ID", icon: "ti-user-check" },
+  { name: "Driving license", icon: "ti-car" },
+  { name: "Offline data entry", icon: "ti-keyboard" },
+  { name: "WhatsApp print / print", icon: "ti-printer" },
+  { name: "Arms license", icon: "ti-shield" },
+  { name: "Resume / CV / Bio data", icon: "ti-file-text" },
+  { name: "Gujarati/Hindi/English typing", icon: "ti-language" },
+  { name: "Disability certificate", icon: "ti-accessible" },
+  { name: "Passport", icon: "ti-passport" },
+  { name: "Scholarship form", icon: "ti-school" },
+  { name: "Other service", icon: "ti-dots" },
+];
+
+let selectedServices = new Set();
+let tokenCounter = parseInt(localStorage.getItem('sof_token') || '100');
+
+function buildGrid() {
+  const grid = document.getElementById('svcGrid');
+  SERVICES.forEach((s, i) => {
+    const chip = document.createElement('div');
+    chip.className = 'svc-chip';
+    chip.innerHTML = `<i class="ti ${s.icon}"></i>${s.name}`;
+    chip.onclick = () => {
+      if (selectedServices.has(i)) { selectedServices.delete(i); chip.classList.remove('selected'); }
+      else { selectedServices.add(i); chip.classList.add('selected'); }
+      document.getElementById('svcName').value = [...selectedServices].map(x => SERVICES[x].name).join(', ');
+    };
+    grid.appendChild(chip);
+  });
+}
+buildGrid();
+
+function setDefaults() {
+  const now = new Date();
+  document.getElementById('cdate').value = now.toISOString().split('T')[0];
+  const hh = String(now.getHours()).padStart(2,'0');
+  const mm = String(now.getMinutes()).padStart(2,'0');
+  document.getElementById('ctime').value = `${hh}:${mm}`;
+}
+setDefaults();
+
+function fmtDate(d) {
+  if (!d) return '';
+  const dt = new Date(d);
+  return dt.toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' });
+}
+function fmtTime(t) {
+  if (!t) return '';
+  const [h, m] = t.split(':');
+  const ap = h >= 12 ? 'PM' : 'AM';
+  return `${((parseInt(h) % 12) || 12).toString().padStart(2,'0')}:${m} ${ap}`;
+}
+
+function validate() {
+  const name = document.getElementById('cname').value.trim();
+  const mobile = document.getElementById('cmobile').value.trim();
+  const svc = document.getElementById('svcName').value.trim();
+  if (!name) return 'Customer name bharvo.';
+  if (!/^\d{10}$/.test(mobile)) return 'Valid 10-digit mobile number bharvo.';
+  if (!svc) return 'Ochha ma ek service select karo.';
+  return '';
+}
+
+function showError(msg) {
+  const el = document.getElementById('errMsg');
+  el.textContent = msg;
+  el.style.display = msg ? 'block' : 'none';
+}
+
+function generateToken() {
+  const err = validate();
+  showError(err);
+  if (err) return;
+  tokenCounter++;
+  localStorage.setItem('sof_token', tokenCounter);
+
+  const name = document.getElementById('cname').value.trim();
+  const mobile = document.getElementById('cmobile').value.trim();
+  const date = fmtDate(document.getElementById('cdate').value);
+  const time = fmtTime(document.getElementById('ctime').value);
+  const svc = document.getElementById('svcName').value.trim();
+  const fb = document.getElementById('feedback').value.trim();
+
+  document.getElementById('tokenNum').textContent = `SOF-${tokenCounter}`;
+  document.getElementById('tokenDate').textContent = `${date}${time ? ' · ' + time : ''}`;
+
+  const rows = [
+    ['Customer', name],
+    ['Mobile', mobile],
+    ['Date', date],
+    ['Time', time],
+    ['Service', svc],
+    fb ? ['Feedback', fb] : null,
+  ].filter(Boolean);
+
+  document.getElementById('receiptRows').innerHTML = rows.map(([k,v]) =>
+    `<div class="receipt-row"><span class="receipt-key">${k}</span><span class="receipt-val">${v}</span></div>`
+  ).join('');
+
+  const box = document.getElementById('tokenBox');
+  box.style.display = 'block';
+  setTimeout(() => box.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+}
+
+function sendWhatsApp() {
+  const err = validate();
+  showError(err);
+  if (err) return;
+  if (document.getElementById('tokenBox').style.display === 'none') generateToken();
+
+  const name = document.getElementById('cname').value.trim();
+  const mobile = document.getElementById('cmobile').value.trim();
+  const date = fmtDate(document.getElementById('cdate').value);
+  const time = fmtTime(document.getElementById('ctime').value);
+  const svc = document.getElementById('svcName').value.trim();
+  const fb = document.getElementById('feedback').value.trim();
+  const token = document.getElementById('tokenNum').textContent;
+
+  const msg = [
+    `🏢 *Smart Online Form & CSC Center*`,
+    `📍 7, Nr C-DAC Computer, Bavla Road, Sanand – 382110`,
+    `📞 9726266991`,
+    ``,
+    `✅ *Appointment Confirm Thayu Che!*`,
+    `🎫 Token No: *${token}*`,
+    ``,
+    `👤 Name: ${name}`,
+    `📱 Mobile: ${mobile}`,
+    `📅 Date: ${date}`,
+    `🕐 Time: ${time}`,
+    `🗂️ Service: ${svc}`,
+    fb ? `💬 Feedback: ${fb}` : null,
+    ``,
+    `Aapno appointment confirm thayo che.`,
+    `Krupaya samay par padharo. 🙏`,
+    ``,
+    `— Smart Online Form & CSC Center`,
+  ].filter(v => v !== null).join('\n');
+
+  // Tamara number 9726266991 par message jaase
+  const ownerUrl = `https://wa.me/919726266991?text=${encodeURIComponent(msg)}`;
+  window.open(ownerUrl, '_blank');
+}
+
+function resetForm() {
+  ['cname','cmobile','svcName','feedback'].forEach(id => document.getElementById(id).value = '');
+  selectedServices.clear();
+  document.querySelectorAll('.svc-chip').forEach(c => c.classList.remove('selected'));
+  document.getElementById('tokenBox').style.display = 'none';
+  showError('');
+  setDefaults();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
